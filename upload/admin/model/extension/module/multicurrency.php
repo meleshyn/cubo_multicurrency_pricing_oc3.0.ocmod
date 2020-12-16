@@ -51,7 +51,7 @@ class ModelExtensionModuleMulticurrency extends Model {
     }
 
     public function updateProductsCurrencies($round_price) {
-        $this->db->query("UPDATE `" . DB_PREFIX . "product` AS `p` LEFT JOIN `" . DB_PREFIX . "manufacturer` AS `m` ON `p`.`manufacturer_id` = `m`.`manufacturer_id` AND `p`.`currency_id` = `m`.`currency_id` SET `p`.`price` = " . ($round_price ? 'ROUND' : '') . "(IF(`m`.`currency_value`, `p`.`currency_price` * `m`.`currency_value`, `p`.`currency_price` * (SELECT `value` FROM `" . DB_PREFIX . "currency` AS `c` WHERE `c`.`currency_id` = `p`.`currency_id`)))");
+        $this->db->query("UPDATE `" . DB_PREFIX . "product` AS `p` LEFT JOIN `" . DB_PREFIX . "manufacturer` AS `m` ON `p`.`manufacturer_id` = `m`.`manufacturer_id` AND `p`.`currency_id` = `m`.`currency_id` SET `p`.`price` = " . ($round_price ? 'ROUND' : '') . "(IF(`m`.`currency_value`, `p`.`currency_price` * `m`.`currency_value`, `p`.`currency_price` * (1/(SELECT `value` FROM `" . DB_PREFIX . "currency` AS `c` WHERE `c`.`currency_id` = `p`.`currency_id`))))");
     }
 
     public function updateProductsCurrency($manufacturer_id, $manufacturer, $round_price) {
